@@ -16,7 +16,7 @@ const parts=[
   read('webapp-02.b64').slice(0,20000),
   read('webapp-03.b64').slice(0,20000),
   read('webapp-04.b64').slice(0,20000),
-  read('webapp-05a.b64').slice(0,10000)+read('webapp-05b.b64').slice(0,10000),
+  read('webapp-05a.b64').slice(0,10000)+read('fix05b.b64').slice(0,10000),
   read('webapp-06.b64').slice(0,20000),
   read('webapp-07.b64').slice(0,14004)
 ];
