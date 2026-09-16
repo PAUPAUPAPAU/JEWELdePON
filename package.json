@@ -1,13 +1,11 @@
 {
   "name": "jewel-de-pon",
-  "version": "0.9.23b",
+  "version": "0.9.24",
   "private": true,
   "description": "JEWEL de PON online PvP server",
-  "engines": {
-    "node": ">=20.0.0 <25.0.0"
-  },
+  "engines": {"node": ">=20.0.0 <25.0.0"},
   "scripts": {
-    "start": "node server-0923b-wrapper.js",
-    "check": "node --check bootstrap-0923.js && node --check server-0923.js && node --check server-0923b-wrapper.js"
+    "start": "node server-0924-wrapper.js",
+    "check": "node --check bootstrap-0923.js && node --check server-0923.js && node --check server-0924-wrapper.js"
   }
 }
