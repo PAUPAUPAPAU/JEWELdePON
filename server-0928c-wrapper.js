@@ -44,27 +44,12 @@ html=applyPatch(html,'patch-0925-from-0923.json','v0.9.25');
 html=applyPatch(html,'patch-0926-from-0925.json','v0.9.26');
 html=applyPatch(html,'patch-0927-from-0926.json','v0.9.27');
 html=applyPatch(html,'patch-0928c-from-0927.json','v0.9.28c');
-
-function loadAudioB64(prefix){
-  const dir=path.join(ROOT,'assets','audio-b64');
-  const files=fs.readdirSync(dir).filter(n=>n.startsWith(prefix+'-')&&n.endsWith('.b64')).sort();
-  if(!files.length)throw new Error('Missing audio chunks: '+prefix);
-  return Buffer.from(files.map(n=>fs.readFileSync(path.join(dir,n),'utf8').trim()).join(''),'base64');
-}
-const battleMp3=loadAudioB64('battle');
-const pinchMp3=loadAudioB64('PINCH');
-if(battleMp3.length!==700792)throw new Error('Unexpected battle.mp3 length: '+battleMp3.length);
-if(pinchMp3.length!==620879)throw new Error('Unexpected PINCH.mp3 length: '+pinchMp3.length);
-if(sha(battleMp3)!=='09cd86b9e8cc2e1be6a7e2fe1caa77964d8a0525109d31241a21cbe49695822a')throw new Error('battle.mp3 SHA mismatch');
-if(sha(pinchMp3)!=='8142491e3f7e9015a7de635b54567917dad0cc00485475a688451681bd2cda8f')throw new Error('PINCH.mp3 SHA mismatch');
+if(Buffer.byteLength(html)!==276904)throw new Error('Unexpected v0.9.28c HTML length: '+Buffer.byteLength(html));
+if(sha(html)!=='ffbc63b2e274d6370e8d5a009c0042b6257d9ba27a038586019ba356c739a5f4')throw new Error('v0.9.28c HTML SHA mismatch');
 
 global.__JDP_HTML_BUFFER=Buffer.from(html,'utf8');
-global.__JDP_BGM_NORMAL=battleMp3;
-global.__JDP_BGM_DANGER=pinchMp3;
 let source=fs.readFileSync(path.join(ROOT,'server-0923.js'),'utf8');
 source=source.replace('const HTML_BUFFER=loadHtmlBuffer();','const HTML_BUFFER=global.__JDP_HTML_BUFFER;');
-source=source.replace('bgmNormal:melody(false),bgmDanger:melody(true),','bgmNormal:global.__JDP_BGM_NORMAL,bgmDanger:global.__JDP_BGM_DANGER,');
-source=source.replace("res.writeHead(200,{'Content-Type':'audio/wav','Content-Length':buf.length,'Cache-Control':'public, max-age=31536000, immutable','X-Content-Type-Options':'nosniff'});res.end(buf);return;","const audioType=(key==='bgmNormal'||key==='bgmDanger')?'audio/mpeg':'audio/wav';res.writeHead(200,{'Content-Type':audioType,'Content-Length':buf.length,'Cache-Control':'public, max-age=31536000, immutable','X-Content-Type-Options':'nosniff'});res.end(buf);return;");
 source=source.replace("version:'0.9.23'","version:'0.9.28c'");
 source=source.replace('JEWEL de PON v0.9.23 server:','JEWEL de PON v0.9.28c server:');
 const runtimeFile=path.join(ROOT,'server-0928c-runtime.js');
