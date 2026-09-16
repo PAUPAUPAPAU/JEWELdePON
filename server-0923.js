@@ -36,6 +36,10 @@ function loadHtmlBuffer(){
   return buf;
 }
 const HTML_BUFFER=loadHtmlBuffer();
+const CUSTOM_BGM={
+  battle:fs.readFileSync(path.join(ROOT,'audio','battle.mp3')),
+  PINCH:fs.readFileSync(path.join(ROOT,'audio','PINCH.mp3'))
+};
 
 const SR=16000, TAU=Math.PI*2;
 function wavFrom(samples){
@@ -154,8 +158,10 @@ const server=http.createServer(async(req,res)=>{
       res.writeHead(200,{'Content-Type':'text/html; charset=utf-8','Content-Length':HTML_BUFFER.length,'Cache-Control':'no-store','X-Content-Type-Options':'nosniff','X-Frame-Options':'SAMEORIGIN','Referrer-Policy':'same-origin'});res.end(HTML_BUFFER);return;
     }
     if(req.method==='GET'&&u.pathname.startsWith('/audio/')&&u.pathname.endsWith('.mp3')){
-      const key=path.basename(u.pathname,'.mp3'),buf=AUDIO_STORE[key];if(!buf)return json(res,404,{error:'AUDIO_NOT_FOUND'});
-      res.writeHead(200,{'Content-Type':'audio/wav','Content-Length':buf.length,'Cache-Control':'public, max-age=31536000, immutable','X-Content-Type-Options':'nosniff'});res.end(buf);return;
+      const key=path.basename(u.pathname,'.mp3');
+      const custom=Object.hasOwn(CUSTOM_BGM,key);
+      const buf=custom?CUSTOM_BGM[key]:AUDIO_STORE[key];if(!Buffer.isBuffer(buf))return json(res,404,{error:'AUDIO_NOT_FOUND'});
+      res.writeHead(200,{'Content-Type':custom?'audio/mpeg':'audio/wav','Content-Length':buf.length,'Cache-Control':custom?'public, max-age=3600':'public, max-age=31536000, immutable','X-Content-Type-Options':'nosniff'});res.end(buf);return;
     }
     if(req.method==='GET'&&u.pathname==='/api/events'){
       const c=(u.searchParams.get('code')||''),clientId=u.searchParams.get('clientId')||'';

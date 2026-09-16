@@ -44,8 +44,8 @@ html=applyPatch(html,'patch-0925-from-0923.json','v0.9.25');
 html=applyPatch(html,'patch-0926-from-0925.json','v0.9.26');
 html=applyPatch(html,'patch-0927-from-0926.json','v0.9.27');
 html=applyPatch(html,'patch-0928c-from-0927.json','v0.9.28c');
-if(Buffer.byteLength(html)!==276904)throw new Error('Unexpected v0.9.28c HTML length: '+Buffer.byteLength(html));
-if(sha(html)!=='ffbc63b2e274d6370e8d5a009c0042b6257d9ba27a038586019ba356c739a5f4')throw new Error('v0.9.28c HTML SHA mismatch');
+if(Buffer.byteLength(html)!==276815)throw new Error('Unexpected v0.9.28c HTML length: '+Buffer.byteLength(html));
+if(sha(html)!=='ec6be90293fa8ef3236cae834e73062a7f6048d4d5bcc1e66d8c4702a862894b')throw new Error('v0.9.28c HTML SHA mismatch');
 
 global.__JDP_HTML_BUFFER=Buffer.from(html,'utf8');
 let source=fs.readFileSync(path.join(ROOT,'server-0923.js'),'utf8');
