@@ -36,17 +36,17 @@ test('No extra wave after 8 seconds, even with available room; next clear is req
   h.time(20000);h.run('updateIncoming(playerIncoming,"player",20000)');
   assert.equal(h.run(cells('player')),0);assert.equal(h.run('queuePower(playerIncoming)'),76);
 });
-test('Next real clear unlocks delivery, applies counterattack first, and blocks delivery during clearing',()=>{
+test('Next real clear unlocks committed delivery and blocks it during clearing',()=>{
   const h=harness();support(h);incoming(h);
   h.run('garbage.y=garbage.targetY;updateIncoming(playerIncoming,"player",3500);garbage=null;extraGarbages=[];');
   h.time(3600);
   h.run('for(let c=0;c<4;c++)grid[11][c].c=5;vsActive=true;clearMatches();');
   assert.equal(h.run('playerGarbageDelivery.phase'),'ready');assert(h.run('clearJobs.length>0'));
-  assert.equal(h.run('queuePower(playerIncoming)'),73);assert.equal(h.run('playerCancelledTotal'),3);
+  assert.equal(h.run('queuePower(playerIncoming)'),76);assert.equal(h.run('playerCancelledTotal'),0);
   h.run('updateIncoming(playerIncoming,"player",3600)');assert.equal(h.run(cells('player')),0);
   h.time(4300);h.run('updateClear(4300);updateMotion(1,4300);gravity();updateMotion(1,4300);updateIncoming(playerIncoming,"player",4300)');
   assert(h.run(cells('player'))>0);assert.equal(h.run('playerGarbageDelivery.phase'),'resolving');
-  assert.equal(h.run(cells('player')+'+queuePower(playerIncoming)'),73);
+  assert.equal(h.run(cells('player')+'+queuePower(playerIncoming)'),76);
 });
 test('No forced drop interrupts a conversion older than 8 seconds',()=>{
   const h=harness();support(h,8);h.run('garbage=makeGarbageWave(12);garbage.row=garbage.y=garbage.targetY=6;startConversion();');
@@ -58,10 +58,10 @@ test('Unmatured warning packets do not join an earlier wave',()=>{
   h.time(3400);h.run('updateIncoming(playerIncoming,"player",3400)');
   assert.equal(h.run(cells('player')),12);assert.equal(h.run('queuePower(playerIncoming)'),30);
 });
-test('Warning remainder can be fully cancelled without becoming physical garbage',()=>{
+test('Committed remainder survives counterattacks until the next wave',()=>{
   const h=harness();support(h);incoming(h);h.run('commitVsPackets("player",[{w:6,h:13,cells:78}]);');
-  assert.equal(h.run('queuePower(playerIncoming)'),0);assert.equal(h.run(cells('player')),24);
-  assert.equal(h.run('playerCancelledTotal'),76);assert.equal(h.run('queuePower(cpuIncoming)'),2);
+  assert.equal(h.run('queuePower(playerIncoming)'),76);assert.equal(h.run(cells('player')),24);
+  assert.equal(h.run('playerCancelledTotal'),0);assert.equal(h.run('queuePower(cpuIncoming)'),78);
 });
 test('CPU receives the same capacity-limited wave and waits for next clear',()=>{
   const h=harness();support(h,4,'cpu');incoming(h,100,'cpu');
@@ -69,7 +69,7 @@ test('CPU receives the same capacity-limited wave and waits for next clear',()=>
   h.run('cpuGarbage.y=cpuGarbage.targetY;updateIncoming(cpuIncoming,"cpu",3500);cpuGarbage=null;');
   h.time(20000);h.run('updateIncoming(cpuIncoming,"cpu",20000)');assert.equal(h.run(cells('cpu')),0);
   h.run('for(let c=0;c<4;c++)cpuGrid[11][c].c=5;vsActive=true;cpuClearMatches();');
-  assert.equal(h.run('cpuGarbageDelivery.phase'),'ready');assert.equal(h.run('queuePower(cpuIncoming)'),73);
+  assert.equal(h.run('cpuGarbageDelivery.phase'),'ready');assert.equal(h.run('queuePower(cpuIncoming)'),76);
 });
 test('Sparse 19-cell wave converts to exactly 19 jewels on player and CPU',()=>{
   for(const side of ['player','cpu']){
@@ -98,9 +98,9 @@ test('Long frame on conversion completion preserves combo on both sides',()=>{
   }
 });
 test('Garbage falling and FLIP protect combo; ordinary horizontal swaps do not',()=>{
-  const h=harness();support(h);incoming(h);h.run('comboLevel=3;comboExpireAt=1;maintainComboWindow(4000)');
+  const h=harness();support(h);incoming(h);h.run('comboLevel=3;comboExpireAt=4400;maintainComboWindow(4000)');
   assert.equal(h.run('comboLevel'),3);
-  h.run('garbage.y=garbage.targetY;playerFlipHoldUntil=9000;comboExpireAt=1;maintainComboWindow(5000)');assert.equal(h.run('comboLevel'),3);
+  h.run('garbage.y=garbage.targetY;playerFlipHoldUntil=9000;maintainComboWindow(5000)');assert.equal(h.run('comboLevel'),3);
   h.run('playerFlipHoldUntil=0;garbage=null;grid[11][0].x=1;comboExpireAt=1;maintainComboWindow(5000)');assert.equal(h.run('comboLevel'),0);
 });
 test('Idle combo expires normally and rematch resets delivery gates',()=>{
