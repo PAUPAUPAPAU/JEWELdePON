@@ -1,0 +1,20 @@
+{
+  "name": "JEWEL de PON",
+  "image": "mcr.microsoft.com/devcontainers/javascript-node:1-22-bookworm",
+  "forwardPorts": [8080],
+  "portsAttributes": {
+    "8080": {
+      "label": "JEWEL de PON preview",
+      "onAutoForward": "openBrowser"
+    }
+  },
+  "postCreateCommand": "npm install",
+  "postStartCommand": "bash -lc 'if ! curl -fsS http://127.0.0.1:8080/health >/dev/null 2>&1; then nohup npm start >/tmp/jewel-de-pon.log 2>&1 & fi'",
+  "customizations": {
+    "vscode": {
+      "settings": {
+        "terminal.integrated.defaultProfile.linux": "bash"
+      }
+    }
+  }
+}
