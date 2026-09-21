@@ -1,5 +1,5 @@
 const fs=require('fs'),vm=require('vm'),path=require('path');
-module.exports=function makeHarness(version='0934'){
+module.exports=function makeHarness(version='0935'){
   const root=path.resolve(__dirname,'..');
   const wrapper=fs.readFileSync(path.join(root,'server-'+version+'-wrapper.js'),'utf8');
   const html=vm.runInNewContext(wrapper.slice(0,wrapper.indexOf('global.__JDP_HTML_BUFFER'))+'\nhtml;', {require,Buffer,__dirname:root});
