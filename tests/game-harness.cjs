@@ -1,18 +1,18 @@
 const fs=require('fs'),vm=require('vm'),path=require('path');
-module.exports=function makeHarness(){
+module.exports=function makeHarness(version='0934'){
   const root=path.resolve(__dirname,'..');
-  const wrapper=fs.readFileSync(path.join(root,'server-0933-wrapper.js'),'utf8');
+  const wrapper=fs.readFileSync(path.join(root,'server-'+version+'-wrapper.js'),'utf8');
   const html=vm.runInNewContext(wrapper.slice(0,wrapper.indexOf('global.__JDP_HTML_BUFFER'))+'\nhtml;', {require,Buffer,__dirname:root});
   const scripts=[...html.matchAll(/<script\b[^>]*>([\s\S]*?)<\/script>/g)].map(m=>m[1]);
   const noop=()=>{};let clock=1000,id=0,seed=12345;
-  const timers=new Map(),elements=new Map(),storage=new Map();
-  const context=new Proxy({measureText:()=>({width:10}),createLinearGradient:()=>({addColorStop:noop}),createRadialGradient:()=>({addColorStop:noop})},{get:(o,k)=>o[k]??noop,set:(o,k,v)=>(o[k]=v,true)});
+  const timers=new Map(),elements=new Map(),storage=new Map(),audios=[];
+  const context=new Proxy({arc:(x,y,r)=>{if(r<0)throw new Error('IndexSizeError: negative Canvas arc radius');},measureText:()=>({width:10}),createLinearGradient:()=>({addColorStop:noop}),createRadialGradient:()=>({addColorStop:noop})},{get:(o,k)=>o[k]??noop,set:(o,k,v)=>(o[k]=v,true)});
   function element(key=''){
-    const classes=new Set();
+    const classes=new Set(),listeners=new Map();
     return {id:key,style:{},dataset:{},textContent:'',innerHTML:'',value:'',children:[],width:360,height:720,
       classList:{add:(...a)=>a.forEach(x=>classes.add(x)),remove:(...a)=>a.forEach(x=>classes.delete(x)),contains:x=>classes.has(x),toggle:x=>classes.has(x)?classes.delete(x):classes.add(x)},
       getContext:()=>context,getBoundingClientRect:()=>({left:0,top:0,width:360,height:720}),
-      addEventListener:noop,removeEventListener:noop,setAttribute:noop,appendChild:noop,replaceChildren:noop,focus:noop,setPointerCapture:noop,
+      addEventListener:(type,fn)=>{if(!listeners.has(type))listeners.set(type,[]);listeners.get(type).push(fn);},dispatch:(type,event)=>{for(const fn of listeners.get(type)||[])fn(event);},removeEventListener:noop,setAttribute:noop,appendChild:noop,replaceChildren:noop,focus:noop,setPointerCapture:noop,
       querySelector:()=>element(),querySelectorAll:()=>[],toDataURL:()=>''};
   }
   const document={getElementById:k=>{if(!elements.has(k))elements.set(k,element(k));return elements.get(k);},querySelectorAll:()=>[],createElement:()=>element(),addEventListener:noop,body:element(),documentElement:element(),hidden:false};
@@ -21,7 +21,7 @@ module.exports=function makeHarness(){
     navigator:{userAgent:'test'},location:{protocol:'http:',origin:'http://localhost',href:'http://localhost/'},
     localStorage:{getItem:k=>storage.get(k)??null,setItem:(k,v)=>storage.set(k,v),removeItem:k=>storage.delete(k)},
     Image:class{constructor(){this.complete=false;}},ResizeObserver:class{observe(){}},
-    Audio:class{constructor(src){this.src=src;this.volume=0;this.currentTime=0;}addEventListener(){}load(){}play(){return Promise.resolve();}pause(){}cloneNode(){return new this.constructor(this.src);}},
+    Audio:class{constructor(src){this.src=src;this.volume=0;this.currentTime=0;this.plays=0;this.pauses=0;audios.push(this);}addEventListener(){}load(){}play(){this.plays++;return Promise.resolve();}pause(){this.pauses++;}cloneNode(){return new this.constructor(this.src);}},
     setTimeout:(fn,d=0)=>{const key=++id;timers.set(key,{fn,due:clock+d});return key;},clearTimeout:key=>timers.delete(key),
     setInterval:()=>++id,clearInterval:noop,requestAnimationFrame:()=>{sandbox.frames++;return ++id;},cancelAnimationFrame:noop,frames:0,
     fetch:()=>Promise.reject(new Error('Network disabled in simulation')),addEventListener:noop};
@@ -35,5 +35,5 @@ module.exports=function makeHarness(){
   run(`grid=emptyGrid();cpuGrid=cpuEmptyGrid();overflow=Array(C).fill(null);cpuOverflow=Array(C).fill(null);
     garbage=null;extraGarbages=[];cpuGarbage=null;cpuExtraGarbages=[];
     waitingForStart=false;startCountdownActive=false;matchFinished=false;autoRiseEnabled=false;vsActive=false;`);
-  return {run,time,tick,flush,frames:()=>sandbox.frames,element:k=>elements.get(k)};
+  return {run,time,tick,flush,frames:()=>sandbox.frames,element:k=>elements.get(k),audios};
 };
