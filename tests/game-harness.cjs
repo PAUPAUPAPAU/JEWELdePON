@@ -1,7 +1,7 @@
 const fs=require('fs'),vm=require('vm'),path=require('path');
 module.exports=function makeHarness(){
   const root=path.resolve(__dirname,'..');
-  const wrapper=fs.readFileSync(path.join(root,'server-0932-wrapper.js'),'utf8');
+  const wrapper=fs.readFileSync(path.join(root,'server-0933-wrapper.js'),'utf8');
   const html=vm.runInNewContext(wrapper.slice(0,wrapper.indexOf('global.__JDP_HTML_BUFFER'))+'\nhtml;', {require,Buffer,__dirname:root});
   const scripts=[...html.matchAll(/<script\b[^>]*>([\s\S]*?)<\/script>/g)].map(m=>m[1]);
   const noop=()=>{};let clock=1000,id=0,seed=12345;
