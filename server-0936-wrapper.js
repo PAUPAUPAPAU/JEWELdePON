@@ -82,6 +82,20 @@ source=source.replace("  room.matchId=(room.matchId||0)+1;", "  room.boardChange
 source=source.replace("    if(req.method==='POST'&&u.pathname==='/api/create'){", "    if(req.method==='POST'&&u.pathname==='/api/board-change'){\n      const room=getRoom(b.code);getPlayer(room,b.clientId);ensureMatch(room,b.matchId);touch(room);\n      return json(res,200,boardChangeService.handle(room,b,emit));\n    }\n    if(req.method==='POST'&&u.pathname==='/api/create'){");
 source=source.replace("      emitExcept(room,b.clientId,{type:'game_state'", "      if((Number(b.state.changeEpoch)||0)<(room.changeEpoch||0))return json(res,200,{ok:true,stale:true});\n      emitExcept(room,b.clientId,{type:'game_state'");
 
+
+function enableAppRooms(serverSource){
+  const route="if(req.method==='POST'&&u.pathname==='/api/create'){";
+  const create="const c=roomCode(),room=";
+  if(!serverSource.includes(route)||!serverSource.includes(create))throw Error('APP_ROOM_PATCH_TARGET_CHANGED');
+  serverSource=serverSource.replace(route,"if(req.method==='POST'&&(u.pathname==='/api/create'||u.pathname==='/api/app-create')){");
+  serverSource=serverSource.replace(create,`const appRoom=u.pathname==='/api/app-create';
+      if(appRoom&&(typeof b.code!=='string'||!/^\\d{4}$/.test(b.code)))return json(res,400,{error:'APP_CODE_INVALID'});
+      if(appRoom&&rooms.has(b.code))return json(res,409,{error:'APP_CODE_IN_USE'});
+      const c=appRoom?b.code:roomCode(),room=`);
+  return serverSource;
+}
+source=enableAppRooms(source);
+
 const runtimeFile=path.join(ROOT,'server-0936-runtime.js');
 const m=new Module(runtimeFile,module);
 m.filename=runtimeFile;m.paths=module.paths;
