@@ -1,0 +1,92 @@
+[
+  {
+    "name": "combo1",
+    "bytes": 33408,
+    "sha256": "5799751c228c2400d77024a089b150c8302e8a8a2cd1cdd478f81fcee8afb661"
+  },
+  {
+    "name": "combo2",
+    "bytes": 29952,
+    "sha256": "4b6c304b8e13ec84e6e87afea29c6ce52f704e9e705110176ebf492504a80e5c"
+  },
+  {
+    "name": "combo3",
+    "bytes": 29952,
+    "sha256": "5eae12355d690b13df7f6dafac17c1e1dc89223b2dce9a734b5dfa3a2a85306b"
+  },
+  {
+    "name": "combo4",
+    "bytes": 33408,
+    "sha256": "22bdc1a00fd789e410385cde256e130cb07326c0d9fc24a25c42da60180055fa"
+  },
+  {
+    "name": "combo5",
+    "bytes": 31104,
+    "sha256": "3ee891746b7f6c7fb10c457d02a3423edf981402a7bd9ad1c48d13ca7bbcdfc8"
+  },
+  {
+    "name": "combo6",
+    "bytes": 31104,
+    "sha256": "89cfa0181eead5d2e0865302b94eb638cfc60712e311e0db8d5aebeb330fa3d8"
+  },
+  {
+    "name": "combo7",
+    "bytes": 33408,
+    "sha256": "3f7f0a48c4448752ef4f536bc32da3eb76015ef5f752a3dfb0e934980ed6f2e2"
+  },
+  {
+    "name": "combo8",
+    "bytes": 34560,
+    "sha256": "e401a6ea25061496bf673ead93a27dd4773f3d3a443e0c07c579e3cc30b0efef"
+  },
+  {
+    "name": "combo9",
+    "bytes": 29952,
+    "sha256": "4f735b7502b2f32f14ac2a2c3d69aabd0c86804e50eee2ae02316b003c907dbf"
+  },
+  {
+    "name": "combo10",
+    "bytes": 29952,
+    "sha256": "374d6c050bff551d5959c5d45793122927ca510baca3aa7849d2f5fdfbcc507e"
+  },
+  {
+    "name": "item",
+    "bytes": 28800,
+    "sha256": "978525283d2b722a4cacccc75294c7cbd5f0572e2b761c2c786ef337b5e01900"
+  },
+  {
+    "name": "ojamaochiru",
+    "bytes": 59136,
+    "sha256": "20b5872beb74a235da3c65860c0f8030ce81dfaaa5ea025c1d59340a5a4fea84"
+  },
+  {
+    "name": "katta",
+    "bytes": 62693,
+    "sha256": "a51bbd271640c11e302fa794ee27f7db5b9f78c7c9c7d9e172614c93497be6cf"
+  },
+  {
+    "name": "ugokasu",
+    "bytes": 36864,
+    "sha256": "5f104f1ef0d8feb39d16f4a2d2244ed66398c2a0cb70e72b7dc27e3f4a1d5944"
+  },
+  {
+    "name": "maketa",
+    "bytes": 124416,
+    "sha256": "dc9fc022bb3b2c1630df4e81bcb5befeacf74b2ebbd42ebb53d3c8bc85113b4e"
+  },
+  {
+    "name": "seriagari",
+    "bytes": 4179,
+    "sha256": "7c7a4a5b20d0c9ed191fa2b20d28aa7475cb93351e98f98e9b71531d5c4a4d5e"
+  },
+  {
+    "name": "danger",
+    "bytes": 17554,
+    "sha256": "c6b53106f86f78d4fe70ce589306e9104333284af17dcc2bb80d84f1cd764ed8"
+  },
+  {
+    "name": "ojamahenkan",
+    "bytes": 17760,
+    "sha256": "d3369dac270ec5ce086b969b9b6222d890161267d0f85e1868bfa00921c731ab"
+  }
+]
