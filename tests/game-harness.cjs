@@ -1,5 +1,5 @@
 const fs=require('fs'),vm=require('vm'),path=require('path');
-module.exports=function makeHarness(version='0938'){
+module.exports=function makeHarness(version='0939'){
   const root=path.resolve(__dirname,'..');
   const wrapper=fs.readFileSync(path.join(root,'server-'+version+'-wrapper.js'),'utf8');
   const html=vm.runInNewContext(wrapper.slice(0,wrapper.indexOf('global.__JDP_HTML_BUFFER'))+'\nhtml;', {require,Buffer,__dirname:root});
@@ -37,4 +37,5 @@ module.exports=function makeHarness(version='0938'){
     waitingForStart=false;startCountdownActive=false;matchFinished=false;autoRiseEnabled=false;vsActive=false;`);
   return {run,time,tick,flush,frames:()=>sandbox.frames,element:k=>elements.get(k),audios};
 };
+
 
