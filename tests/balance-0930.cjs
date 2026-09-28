@@ -1,5 +1,5 @@
 const assert=require('assert/strict'),harness=require('./game-harness.cjs');
-let count=0;
+let count=0;const current=(process.env.JDP_TEST_VERSION||'0940')==='0940';
 function test(name,fn){fn();console.log('PASS '+name);count++;}
 test('A falling jewel pauses 400ms remaining without refilling on either side',()=>{
   for(const side of ['player','cpu']){
@@ -31,10 +31,10 @@ test('Warning can be countered before 2.4s, but locks at the exact boundary',()=
   h.run('enqueuePackets(playerIncoming,packetsFromPower(12),3400)');
   assert.equal(h.run('cancelIncoming(playerIncoming,99).cancelled'),12);assert.equal(h.run('queuePower(playerIncoming)'),18);
 });
-test('Each combo attacks, growing from 6 to 24 cells; 50-combo delivers 1002 cells',()=>{
-  const h=harness();for(const [combo,cells] of [[1,0],[2,6],[4,6],[5,12],[9,12],[10,18],[19,18],[20,24],[50,24]])assert.equal(h.run(`pulsePacketForCombo(${combo})?.cells||0`),cells);
-  h.run('for(let n=1;n<=50;n++)processVsAttack("player",3,n)');assert.equal(h.run('queuePower(cpuIncoming)'),1002);
-  h.run('processVsAttack("player",3,50)');assert.equal(h.run('queuePower(cpuIncoming)'),1002);
+test('Each combo attacks with the version-specific curve and no duplicate pulse',()=>{
+  const h=harness();for(const [combo,cells] of [[1,0],[2,6],[4,6],[5,12],[9,12],[10,18],[19,18],[20,24],[50,current?114:24]])assert.equal(h.run(`pulsePacketForCombo(${combo})?.cells||0`),cells);
+  h.run('for(let n=1;n<=50;n++)processVsAttack("player",3,n)');assert.equal(h.run('queuePower(cpuIncoming)'),current?2352:1002);
+  h.run('processVsAttack("player",3,50)');assert.equal(h.run('queuePower(cpuIncoming)'),current?2352:1002);
 });
 test('Pink begins at 120 seconds and generation stays within the active palette',()=>{
   const h=harness();h.run('resetStepRiseClocks(1000)');

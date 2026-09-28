@@ -11,7 +11,7 @@ for(const size of [1,4,5,6,19,24,72]){
   assert.equal(h.run('grid.flat().filter(Boolean).length'),h.run('cpuGrid.flat().filter(Boolean).length'),`converted ${size}/${delta}`);
   if(delta<expected)assert(h.run('!!conversion&&!!cpuConversion'));
  }
- assert.equal(h.run('grid.flat().filter(Boolean).length'),size);assert.equal(h.run('conversion'),null);assert.equal(h.run('cpuConversion'),null);
+ assert.equal(h.run('grid.flat().filter(Boolean).length'),size);assert.equal(h.run('conversion'),null);assert.equal(h.run('cpuConversion'),null);if(h.run('typeof portStats!=="undefined"')){assert.equal(h.run('portStats.player.converted'),size);assert.equal(h.run('portStats.cpu.converted'),size);assert.equal(h.run('portStats.player.cleared+portStats.cpu.cleared'),0);}
 }
 console.log('PASS 1–72 cells: player/CPU crack stages, cell counts and completion agree at every boundary; total duration is exactly 2/3');
 {
@@ -26,7 +26,7 @@ for(const size of [3,4,5,6])for(const side of ['player','cpu']){
  assert.equal(h.run(`queuePower(${target})`),size===3?0:size);
 }
 {
- const h=make();h.run(`onlineMatchActive=true;lobbyRoomCode='123456';netClientId='a';onlineMatchId=1;vsActive=true;globalThis.sent=[];sendNetGameEvent=(kind,payload)=>sent.push({kind,payload});processVsAttack('player',4,1);processVsAttack('player',5,2);`);
+ const h=make();h.run(`onlineMatchActive=true;lobbyRoomCode='123456';netClientId='a';onlineMatchId=1;vsActive=true;globalThis.sent=[];sendNetGameEvent=(kind,payload)=>sent.push({kind,payload});if(typeof portSendAttack==='function')portSendAttack=n=>sent.push({kind:'attack',payload:{packets:packetsFromPower(n)}});processVsAttack('player',4,1);processVsAttack('player',5,2);`);
  assert.equal(h.run('sent[0].payload.packets.reduce((n,p)=>n+p.cells,0)'),4);
  assert.equal(h.run('sent[1].payload.packets.reduce((n,p)=>n+p.cells,0)'),11);
  h.run(`enqueuePackets(playerIncoming,packetsFromPower(3),performance.now());processVsAttack('player',5,1)`);

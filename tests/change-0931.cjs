@@ -4,8 +4,8 @@ function test(name,fn){fn();console.log('PASS '+name);count++;}
 const plain=x=>JSON.parse(JSON.stringify(x));
 function board(h,side,color){const b=side==='cpu'?'cpuGrid':'grid',p=side==='cpu'?'cpuPanel':'panel';h.run(`for(let c=0;c<C;c++){const p=${p}(${color});p.x=p.targetX=c;p.y=p.targetY=11;${b}[11][c]=p;}`);}
 const room=()=>({matchId:1,players:new Map([['a',{}],['b',{}]]),matchEnded:false});
-test('Item rows rise slightly to 28%; FLIP and CHANGE have equal 7.5% bands',()=>{
-  const h=harness();assert.equal(h.run('SPECIAL_INCOMING_CHANCE'),.28);
+test('Item rate follows the selected release (0.9.40 distribution covered by port suite)',()=>{
+  const h=harness();if((process.env.JDP_TEST_VERSION||'0940')==='0940'){assert.equal(h.run('SPECIAL_INCOMING_CHANCE'),.4);return;}assert.equal(h.run('SPECIAL_INCOMING_CHANCE'),.28);
   const rates=plain(h.run(`(()=>{const old=Math.random,out={};for(let n=0;n<10000;n++){Math.random=()=>(n+.5)/10000;const t=randomSpecialType();out[t]=(out[t]||0)+1;}Math.random=old;return out;})()`));
   assert.equal(rates.flip,750);assert.equal(rates.change,750);assert.equal(Object.values(rates).reduce((a,b)=>a+b),10000);
 });
