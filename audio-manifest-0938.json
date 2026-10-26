@@ -1,0 +1,22 @@
+[
+  {
+    "name": "gameover",
+    "bytes": 384768,
+    "sha256": "b027d9fe6b8a9835176bfd7fffd0683587d040775d5ed2a5c6cd67e5531ce543"
+  },
+  {
+    "name": "banmen",
+    "bytes": 65201,
+    "sha256": "9fb3ad2a3ef95c5b68494142d3119f4f5a3525c207a80629bf8f83bbe10f57c3"
+  },
+  {
+    "name": "321",
+    "bytes": 54528,
+    "sha256": "93b3c1296c4cda1678bf03b8c075d10187dff8fd3cf5ba72207903ce0bd067e8"
+  },
+  {
+    "name": "go",
+    "bytes": 112128,
+    "sha256": "6b1f9817d47a46af202512853d4ae796793885d041f21fec2d018a23e3b38eb0"
+  }
+]
