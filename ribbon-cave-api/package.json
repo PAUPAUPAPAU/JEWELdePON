@@ -1,0 +1,1 @@
+{"name":"ribbon-cave-rankings","version":"1.0.0","private":true,"engines":{"node":">=20"},"dependencies":{"pg":"^8.16.3"}}
