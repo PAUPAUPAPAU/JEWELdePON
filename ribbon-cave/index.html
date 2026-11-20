@@ -3,7 +3,7 @@
 <style>
 *{box-sizing:border-box}html,body{touch-action:none;user-select:none;-webkit-user-select:none;margin:0;height:100%;background:#080d0b;color:#c1ddc7;font-family:monospace;overflow:hidden}body{display:flex;flex-direction:column}header{padding:16px 24px;display:flex;justify-content:space-between;align-items:center;border-bottom:1px solid #23382b}h1{font-size:18px;letter-spacing:3px;margin:0;color:#b3ffb9}small{color:#789a80;font-size:12px}button{font:inherit;color:#b3ffb9;background:#14251a;border:1px solid #405c46;padding:9px 14px;cursor:pointer;border-radius:4px}button:hover{background:#243e2b}main{flex:1;min-height:0;display:flex;align-items:center;justify-content:center;padding:16px;position:relative}.screen{position:relative;width:min(100%,900px);aspect-ratio:4/3;max-height:100%;background:#d0deab;border:3px solid #4e6651;box-shadow:0 0 60px #1c382333;overflow:hidden}canvas{width:100%;height:100%;display:block;touch-action:none;image-rendering:pixelated}.hud{position:absolute;top:0;width:100%;display:flex;justify-content:space-between;padding:12px 16px;color:#26351e;font-size:16px;pointer-events:none;background:#d0deab;border-bottom:2px solid #26351e}.overlay{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;pointer-events:none;color:#25361f;background:#d0deabcc}.overlay h2{font-size:clamp(28px,6vw,56px);letter-spacing:3px;margin:0 0 18px}.overlay p{line-height:1.8;margin:5px;font-size:16px}.overlay button{pointer-events:auto;margin-top:24px;background:#293e25;color:#d9efb9;border:0;padding:14px 30px;font-weight:bold}.hidden{display:none!important}footer{display:flex;align-items:center;justify-content:center;gap:20px;padding:12px 16px;color:#89a68e;font-size:14px}.key{color:#ceebc8}dialog{background:#0f1c13;color:#c1ddc7;border:1px solid #57705c;border-radius:8px;width:min(440px,92vw);padding:24px}dialog::backdrop{background:#000b}dialog h2{margin-top:0;font-size:20px}label{display:block;margin:20px 0;font-size:16px}label span{float:right}input{width:100%;accent-color:#9bd9a0;margin-top:12px}dialog p{font-size:14px;line-height:1.7;color:#90ab96}.row{display:flex;gap:10px;justify-content:flex-end}@media(max-width:600px){header{padding:12px}header small{display:none}main{padding:8px}.screen{aspect-ratio:3/4}footer{font-size:12px;gap:10px}.hud{font-size:14px;padding:10px}}
 .stage{position:absolute;bottom:0;width:100%;padding:8px 12px;background:#d0deab;color:#26351e;font-size:14px;pointer-events:none}.seed{float:right;font-size:12px}.overlay{z-index:2}.overlay small{color:#455c37}.overlay button{margin-top:12px}#selector{pointer-events:auto;margin:8px 0}#selector label{margin:8px;font-size:16px}select{font:inherit;font-size:16px;background:#d0deab;color:#26351e;border:1px solid #26351e;padding:8px 20px;cursor:pointer} .screen{aspect-ratio:4/3!important;width:min(100%,900px,calc((100dvh - 160px)*1.3333));flex-shrink:0}footer{flex-wrap:wrap} @media(max-width:600px){.stage{font-size:12px}.seed{font-size:10px}.overlay p{font-size:14px}.overlay h2{font-size:26px;margin-bottom:8px}.overlay button{font-size:14px;padding:8px 18px}#selector{display:flex;align-items:center;margin:0}#selector label{font-size:14px}select{padding:5px 12px}.overlay small{display:none}} </style>
-<header><div><h1>RIBBON CAVE</h1><small>ONE BUTTON / ENDLESS FLIGHT / PROTOTYPE 08</small></div><button id="settings">操作感の調整</button></header>
+<header><div><h1>RIBBON CAVE</h1><small>ONE BUTTON / ENDLESS FLIGHT / PROTOTYPE 09</small></div><button id="settings">操作感の調整</button></header>
 <main><div class="screen"><canvas id="game" aria-label="洞窟回避ゲーム。スペースキーまたは画面長押しで上昇"></canvas><div class="hud"><b>SCORE <span id="score">00000</span></b><span>BEST <b id="best">00000</b></span></div><div class="overlay" id="overlay"><small>ONE BUTTON CAVE RUN</small><h2 id="title">RIBBON CAVE</h2><p id="message">押し続けて上昇。離すと下降。<br>壁と障害物を避け、どこまでも。</p><div id="selector"><label for="difficulty">難易度</label><select id="difficulty"><option value="easy">イージー</option><option value="normal" selected>ノーマル</option><option value="hard">ハード</option></select></div><button id="start">ゲームスタート</button><button id="replay" class="hidden">同じコースで再挑戦</button><button id="newRun" class="hidden">難易度を選び直す</button></div><div class="stage"><span id="modeLabel">ノーマル</span> · AREA <span id="area">1 / 入口</span><span class="seed">SEED <span id="seed">—</span></span></div></div></main>
 <footer><span><span class="key">SPACE / クリック / タッチ</span> 長押しで上昇</span><span>P：一時停止</span><button id="pause">一時停止</button></footer>
 <dialog id="dialog"><h2>操作感の調整</h2><p>変更は次のプレイから反映。初期値は選択中の難易度に戻ります。調整したプレイの記録は別枠です。</p><label>上昇の加速度 <span id="liftValue"></span><input id="lift" type="range" min="250" max="1100" step="25"></label><label>下降の加速度 <span id="gravityValue"></span><input id="gravity" type="range" min="250" max="1100" step="25"></label><label>スクロール速度 <span id="speedValue"></span><input id="speed" type="range" min="100" max="280" step="10"></label><label>通路の広さ <span id="gapValue"></span><input id="gap" type="range" min="160" max="300" step="10"></label><div class="row"><button id="reset">初期値</button><button id="close">閉じる</button></div></dialog>
@@ -26,12 +26,22 @@ function areaLabel(index){
  for(let i=0;i<=index;i++)if(areaIndex(i)===kind)occurrence++;
  return areas[kind].name+(occurrence>1?String(occurrence).padStart(2,'0'):'');
 }
+function difficultyAt(ai){
+ const level=selected==='easy'?0:Math.floor(Math.max(0,ai)/5);
+ return{level,stress:level/(level+8),rate:selected==='hard'?.05:.03};
+}
+function scrollSpeed(world){
+ const ai=Math.floor(Math.max(0,world)/AREA),d=difficultyAt(ai);
+ if(!d.level)return active.speed;
+ const transition=ai%5===0?smooth(clamp((world-ai*AREA)/360,0,1)):1;
+ return active.speed*Math.pow(1+d.rate,d.level-1+transition);
+}
 function makePlan(ai){
- const kind=areaIndex(ai),base=active.gap,minGap=Math.min(base,mode.min);
- return{ai,kind,start:ai*AREA,end:(ai+1)*AREA,base,minGap,
-  sign:random()<.5?-1:1,cycles:rng(1.9,2.1),phase:rng(-.3,.3),
+ const kind=areaIndex(ai),base=active.gap,d=difficultyAt(ai),minGap=Math.min(base,mode.min-Math.round(d.stress*(selected==='hard'?16:20)));
+ return{ai,kind,start:ai*AREA,end:(ai+1)*AREA,base,minGap,level:d.level,stress:d.stress,
+  sign:random()<.5?-1:1,cycles:rng(1.9,2.1)*(1+d.stress*.15),phase:rng(-.3,.3),
   amplitude:Math.min((H-90-(minGap+8))/2,selected==='easy'?94:selected==='normal'?114:134)*rng(.96,1),
-  columnSpacing:selected==='hard'?250:selected==='normal'?300:350};
+  columnSpacing:(selected==='hard'?250:selected==='normal'?300:350)/(1+d.stress*.35)};
 }
 function planSample(p,x){
  const start=p.ai===0?X:p.start,local=clamp(x-start,0,p.end-start),length=p.end-start;
@@ -53,12 +63,12 @@ function planSample(p,x){
   // Long precision tunnels: most of the region stays close to its tight floor.
   const tight=Math.min(p.base,selected==='easy'?80:selected==='normal'?56:40);
   const wide=Math.min(p.base,selected==='easy'?180:selected==='normal'?150:120);
-  const chamber=(.5+.5*Math.cos(2*Math.PI*local/800))**8;
+  const chamber=(.5+.5*Math.cos(2*Math.PI*local/800))**(8+p.stress*4);
   gap=tight+(wide-tight)*chamber;
-  center+=p.sign*34*Math.sin(phase);
+  center+=p.sign*34*(1+p.stress*.5)*Math.sin(phase);
  }else{
   // Deep: nested bends + successive pinches + columns and floating clusters.
-  center+=p.sign*(Math.min(66,p.amplitude*.7)*Math.sin(phase*.5)+22*Math.sin(2*Math.PI*local/480));
+  center+=p.sign*(Math.min(66,p.amplitude*.7)*Math.sin(phase*.5)+22*Math.sin(2*Math.PI*local/480)+p.stress*7*Math.sin(2*Math.PI*local/320));
   gap=p.minGap+(p.base+35-p.minGap)*(.5+.5*Math.cos(2*Math.PI*local/600))**3;
  }
  center=240+(center-240)*blend;
@@ -80,15 +90,18 @@ function addColumn(p,x,side,width,major=false){
 }
 function addRegionObstacles(p){
  if(p.kind===2){
-  let n=0;for(let x=p.start+180;x<p.end-100;x+=p.columnSpacing*rng(.92,1.08))addColumn(p,x,n++%2?1:-1,rng(42,66),true);
+  let n=0;for(let x=p.start+(p.level?360:180);x<p.end-100;x+=p.columnSpacing*rng(.92,1.08))addColumn(p,x,n++%2?1:-1,rng(42,66),true);
  }else if(p.kind===4){
-  let n=0;for(let x=p.start+230;x<p.end-100;x+=p.columnSpacing*.95*rng(.9,1.1))addColumn(p,x,n++%2?1:-1,rng(30,48),true);
+  let n=0;for(let x=p.start+(p.level?360:230);x<p.end-100;x+=p.columnSpacing*.95*rng(.9,1.1))addColumn(p,x,n++%2?1:-1,rng(30,48),true);
+ }else if(p.kind===1&&p.level>=2){
+  for(let x=p.start+500;x<p.end-150;x+=650/(1+p.stress*.3))addColumn(p,x,random()<.5?1:-1,rng(22,36));
  }else if(p.kind===0){
   for(let x=p.start+600;x<p.end-100;x+=mode.spacing*1.5)addColumn(p,x,random()<.5?1:-1,rng(18,28));
  }
- const size=R*2*3,spacing=(selected==='hard'?205:selected==='normal'?300:420)*(p.kind===4?.7:p.kind===1?1.8:1);
- for(let x=p.start+110;x<p.end-size-45;x+=spacing*rng(.85,1.15)){
-  if(x<X+active.speed*1.8)continue;
+ const minSpacing=selected==='easy'?0:selected==='hard'?140:190;
+ const size=R*2*3,spacing=Math.max(minSpacing,(selected==='hard'?205:selected==='normal'?300:420)*(p.kind===4?.7:p.kind===1?1.8:1)/(1+p.stress*.6));
+ for(let x=p.start+110;x<p.end-size-45;x+=p.level?Math.max(minSpacing,spacing*rng(.85,1.15)):spacing*rng(.85,1.15)){
+  if(x<X+active.speed*1.8||(p.level&&x-p.start<360))continue;
   if(obstacles.some(o=>x<o.x+o.w+48&&x+size>o.x-48))continue;
   const b=corridorBounds(p,x,size),inner=selected==='hard'?27:selected==='normal'?32:38;
   let side=random()<.5?1:-1,top=side>0?b.maxC+inner:b.minC-inner-size;
@@ -120,7 +133,7 @@ function sample(world){if(genEnd<world+1)generate(world+1);let s=segments.find(s
 function updateBest(){let key=selected+(customRun?'-custom':'');$('best').textContent=String(records[key]||0).padStart(5,'0')}
 function setMode(value){selected=value;mode=modes[value];config={lift:450,gravity:450,speed:mode.speed,gap:mode.gap};$('difficulty').value=value;sync();customRun=false;updateBest();try{localStorage.setItem('ribbon-cave-mode-v2',value)}catch{}}
 function begin(replaySeed){mode=modes[selected];active={...config};customRun=active.lift!==450||active.gravity!==450||active.speed!==mode.speed||active.gap!==mode.gap;seed=replaySeed===undefined?freshSeed():replaySeed>>>0;random=seeded(seed);distance=0;y=240;vy=0;trail=[];segments=[];areaOrder=[];obstacles=[];genEnd=0;genCenter=240;genGap=active.gap;lastArea=-1;pointer=false;keys.clear();acc=0;generate(W+100);y=sample(X).center;countdownLeft=3;state='countdown';$('overlay').classList.add('hidden');$('selector').classList.add('hidden');$('replay').classList.add('hidden');$('difficulty').disabled=true;$('pause').textContent='一時停止';$('score').textContent='00000';$('seed').textContent=seed;updateBest();updateArea();overlay('3','長押しで上昇・離すと下降。開始まで落下しません。','');$('start').classList.add('hidden');$('newRun').classList.add('hidden')}
-function updateArea(){let ai=Math.floor((distance+X)/AREA);if(ai!==lastArea){lastArea=ai;$('area').textContent=(ai+1)+' / '+areaLabel(ai);$('modeLabel').textContent=mode.name+(customRun?'（調整）':'')}}
+function updateArea(){let ai=Math.floor((distance+X)/AREA);if(ai!==lastArea){lastArea=ai;$('area').textContent=(ai+1)+' / '+areaLabel(ai);$('modeLabel').textContent=mode.name+(selected==='easy'?'':' LV '+(difficultyAt(ai).level+1))+(customRun?'（調整）':'')}}
 function overlay(title,message,button){$('title').textContent=title;$('message').textContent=message;$('start').textContent=button;$('overlay').classList.remove('hidden')}
 function end(){state='dead';pointer=false;keys.clear();crashedAt=performance.now();let key=selected+(customRun?'-custom':''),score=Math.floor(distance/10);records[key]=Math.max(records[key]||0,score);try{localStorage.setItem('ribbon-cave-records-v3',JSON.stringify(records))}catch{}updateBest();overlay('GAME OVER','SCORE '+score+'　／　'+areaLabel(lastArea),'新しいコース');$('selector').classList.remove('hidden');$('replay').classList.remove('hidden');$('difficulty').disabled=false}
 function pause(){
@@ -133,7 +146,7 @@ function pause(){
   else{state='running';$('overlay').classList.add('hidden')}
  }
 }
-function step(dt){if(state!=='running')return;held=pointer||keys.size>0;vy=clamp(vy+(held?-active.lift:active.gravity)*dt,-270,270);distance+=active.speed*dt;y+=vy*dt;generate(distance+W+100);trail.push({x:distance+X,y});while(trail.length&&trail[0].x<distance-10)trail.shift();while(obstacles.length&&obstacles[0].x+obstacles[0].w<distance-10)obstacles.shift();while(segments.length>1&&segments[0].end<distance-10)segments.shift();let wall=sample(distance+X),hit=y-R<=wall.top||y+R>=wall.bottom;for(let o of obstacles)if(distance+X+R>=o.x&&distance+X-R<=o.x+o.w&&y+R>=o.top&&y-R<=o.bottom)hit=true;$('score').textContent=String(Math.floor(distance/10)).padStart(5,'0');updateArea();if(hit)end()}
+function step(dt){if(state!=='running')return;held=pointer||keys.size>0;vy=clamp(vy+(held?-active.lift:active.gravity)*dt,-270,270);distance+=scrollSpeed(distance+X)*dt;y+=vy*dt;generate(distance+W+100);trail.push({x:distance+X,y});while(trail.length&&trail[0].x<distance-10)trail.shift();while(obstacles.length&&obstacles[0].x+obstacles[0].w<distance-10)obstacles.shift();while(segments.length>1&&segments[0].end<distance-10)segments.shift();let wall=sample(distance+X),hit=y-R<=wall.top||y+R>=wall.bottom;for(let o of obstacles)if(distance+X+R>=o.x&&distance+X-R<=o.x+o.w&&y+R>=o.top&&y-R<=o.bottom)hit=true;$('score').textContent=String(Math.floor(distance/10)).padStart(5,'0');updateArea();if(hit)end()}
 function draw(){ctx.fillStyle='#d0deab';ctx.fillRect(0,0,W,H);ctx.fillStyle='#26351e';ctx.beginPath();ctx.moveTo(0,0);for(let x=0;x<=W+STEP;x+=STEP)ctx.lineTo(x,sample(distance+x).top);ctx.lineTo(W,0);ctx.closePath();ctx.fill();ctx.beginPath();ctx.moveTo(0,H);for(let x=0;x<=W+STEP;x+=STEP)ctx.lineTo(x,sample(distance+x).bottom);ctx.lineTo(W,H);ctx.closePath();ctx.fill();for(let o of obstacles)ctx.fillRect(o.x-distance,o.top,o.w,o.bottom-o.top);ctx.strokeStyle='#385b29';ctx.lineWidth=6;ctx.lineJoin='round';ctx.beginPath();trail.forEach((p,i)=>i?ctx.lineTo(p.x-distance,p.y):ctx.moveTo(p.x-distance,p.y));ctx.stroke();ctx.fillStyle='#182a17';ctx.fillRect(X-R,y-R,R*2,R*2)}
 function frame(now){let raw=Math.max(0,(now-last)/1000||0),elapsed=Math.min(.08,raw);last=now;if(state==='countdown'){tickCountdown(raw);draw();requestAnimationFrame(frame);return}if(state==='running'){acc+=elapsed;while(acc>=1/120){step(1/120);acc-=1/120;if(state!=='running'){acc=0;break}}}draw();requestAnimationFrame(frame)}
 function action(){if(state==='ready'||state==='dead'){if(state==='dead'&&performance.now()-crashedAt<300)return;begin()}else if(state==='paused')pause()}
